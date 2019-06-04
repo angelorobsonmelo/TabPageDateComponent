@@ -1,5 +1,14 @@
 # Tab Page Date Component
+Tabs with month and year
 
+### Project Details
+ * Project created with Androidx
+ * Retrofit
+ * Dagger 2
+ * MVVM
+ * Data Binding
+ * Custom view
+ 
 # Usage
 
 In your build.gradle(Project: android).
