@@ -2,7 +2,7 @@
 
 # Usage
 
-In your build.gradle(Project android).
+In your build.gradle(Project: android).
 ```
 allprojects {
     repositories {
@@ -13,7 +13,7 @@ allprojects {
 
 ```
 
-Add in your build.gradle(Module app) 
+Add in your build.gradle(Module: app) 
 
 ```
 dependencies {
