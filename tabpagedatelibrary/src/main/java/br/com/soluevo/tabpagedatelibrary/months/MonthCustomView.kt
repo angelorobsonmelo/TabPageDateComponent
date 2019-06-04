@@ -7,13 +7,10 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
-import br.com.soluevo.tabpagedate.fragments.OneFragment
-import br.com.soluevo.tabpagedate.fragments.OtherFragment
 import br.com.soluevo.tabpagedatelibrary.R
 import br.com.soluevo.tabpagedatelibrary.commom.ViewModelFactory
 import br.com.soluevo.tabpagedatelibrary.commom.di.ContextModule
@@ -37,7 +34,7 @@ class MonthCustomView(context: Context, attrs: AttributeSet) : LinearLayout(cont
     private lateinit var binding: MonthComponentBinding
     private var viewModel: MonthViewModel? = null
     private val months = mutableListOf<MonthResponse>()
-    val sectionsPagerAdapter = SectionsPagerAdapter()
+    var sectionsPagerAdapter = SectionsPagerAdapter()
 
     init {
         init(context, attrs)
@@ -66,8 +63,7 @@ class MonthCustomView(context: Context, attrs: AttributeSet) : LinearLayout(cont
     fun getMonths(
         cookieId: String,
         activity: AppCompatActivity,
-        fm: FragmentManager,
-        fragments: MutableList<Fragment>
+        fm: FragmentManager
     ) {
         var tabs: TabLayout?
 
@@ -82,24 +78,13 @@ class MonthCustomView(context: Context, attrs: AttributeSet) : LinearLayout(cont
             months.clear()
             months.addAll(it)
 
-            val sectionsPagerAdapter = SectionsPagerAdapter(fm)
+            sectionsPagerAdapter = SectionsPagerAdapter(fm)
             val viewPager: ViewPager = findViewById(R.id.view_pager)
             viewPager.adapter = sectionsPagerAdapter
             tabs = findViewById(R.id.tabs)
             tabs?.setupWithViewPager(viewPager)
 
-            it.forEach { monthResponse ->
-                val title =
-                    getTitle(monthResponse)
-
-                if (isToday(monthResponse)) {
-                    sectionsPagerAdapter.addFragment(OneFragment(), title)
-                } else {
-                    sectionsPagerAdapter.addFragment(OtherFragment(), title)
-                }
-            }
-
-            sectionsPagerAdapter.notifyDataSetChanged()
+            handler?.setMonsths(it)
 
             val lastItem = it.size - 1
             tabs?.getTabAt(lastItem)?.customView?.isSelected = true
@@ -136,7 +121,7 @@ class MonthCustomView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         })
     }
 
-    private fun getTitle(
+     fun getTitle(
         monthResponse: MonthResponse
         ): String {
         val shortMonths = DateFormatSymbols().shortMonths
@@ -147,7 +132,7 @@ class MonthCustomView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         }
     }
 
-    private fun isToday(
+     fun isToday(
         monthResponse: MonthResponse
     ): Boolean {
         val mCalendar = Calendar.getInstance()
