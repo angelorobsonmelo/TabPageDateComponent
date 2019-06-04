@@ -65,10 +65,7 @@ class MonthCustomView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         activity: AppCompatActivity,
         fm: FragmentManager
     ) {
-        var tabs: TabLayout?
-
         viewModel = ViewModelProviders.of(activity, viewModelFactory)[MonthViewModel::class.java]
-
         viewModel?.getMonths(cookieId)
 
         binding.lifecycleOwner = activity
@@ -78,38 +75,16 @@ class MonthCustomView(context: Context, attrs: AttributeSet) : LinearLayout(cont
             months.clear()
             months.addAll(it)
 
-            sectionsPagerAdapter = SectionsPagerAdapter(fm)
-            val viewPager: ViewPager = findViewById(R.id.view_pager)
-            viewPager.adapter = sectionsPagerAdapter
-            tabs = findViewById(R.id.tabs)
-            tabs?.setupWithViewPager(viewPager)
+            val pair = setUpTabsAndViewPager(fm)
+            val viewPager = pair.first
+            val tabs = pair.second
 
             handler?.setMonsths(it)
 
             val lastItem = it.size - 1
-            tabs?.getTabAt(lastItem)?.customView?.isSelected = true
 
-            Handler().postDelayed({
-                tabs?.setScrollPosition(lastItem, 0f, true)
-                viewPager.currentItem = lastItem
-                // or
-                // tabLayout.getTabAt(index).select();
-            }, 100)
-
-            tabs?.setOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab) {
-                    viewModel?.setIndex(tab.position)
-                }
-
-                override fun onTabUnselected(tab: TabLayout.Tab) {
-                    // called when tab unselected
-                }
-
-                override fun onTabReselected(tab: TabLayout.Tab) {
-                    // called when a tab is reselected
-                }
-            })
-
+            navigateToTabToday(tabs, lastItem, viewPager)
+            initTabOnClickListener(tabs)
         })
 
         viewModel?.errorObserver?.observe(activity, Observer {
@@ -121,9 +96,51 @@ class MonthCustomView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         })
     }
 
-     fun getTitle(
+    private fun setUpTabsAndViewPager(
+        fm: FragmentManager
+        ): Pair<ViewPager, TabLayout?> {
+        sectionsPagerAdapter = SectionsPagerAdapter(fm)
+        val viewPager: ViewPager = binding.viewPager
+        viewPager.adapter = sectionsPagerAdapter
+        val tabs = binding.tabs
+        tabs.setupWithViewPager(viewPager)
+        return Pair(viewPager, tabs)
+    }
+
+    private fun navigateToTabToday(
+        tabs: TabLayout?,
+        lastItem: Int,
+        viewPager: ViewPager
+    ) {
+        tabs?.getTabAt(lastItem)?.customView?.isSelected = true
+
+        Handler().postDelayed({
+            tabs?.setScrollPosition(lastItem, 0f, true)
+            viewPager.currentItem = lastItem
+            // or
+            // tabLayout.getTabAt(index).select();
+        }, 100)
+    }
+
+    private fun initTabOnClickListener(tabs: TabLayout?) {
+        tabs?.setOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                viewModel?.setIndex(tab.position)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+                // called when tab unselected
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab) {
+                // called when a tab is reselected
+            }
+        })
+    }
+
+    fun getTitle(
         monthResponse: MonthResponse
-        ): String {
+    ): String {
         val shortMonths = DateFormatSymbols().shortMonths
         return if (isToday(monthResponse)) {
             "Hoje"
@@ -132,18 +149,15 @@ class MonthCustomView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         }
     }
 
-     fun isToday(
+    fun isToday(
         monthResponse: MonthResponse
     ): Boolean {
         val mCalendar = Calendar.getInstance()
-        val mTodayDay = mCalendar.get(Calendar.DAY_OF_MONTH)
         val mTodayMonth = mCalendar.get(Calendar.MONTH)
         val mTodayYear = mCalendar.get(Calendar.YEAR)
 
         return monthResponse.month == mTodayMonth + 1 && monthResponse.year == mTodayYear
-
     }
-
 
     fun clearDisposable() {
         viewModel?.disposables?.clear()

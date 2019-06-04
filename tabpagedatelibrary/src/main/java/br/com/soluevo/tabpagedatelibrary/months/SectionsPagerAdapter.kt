@@ -32,5 +32,6 @@ class SectionsPagerAdapter(fm: FragmentManager) :
     override fun getCount(): Int {
         return mFragmentList.size
     }
-      constructor() : this (AppCompatActivity().supportFragmentManager)
+
+    constructor() : this(AppCompatActivity().supportFragmentManager)
 }
