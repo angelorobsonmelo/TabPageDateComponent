@@ -62,10 +62,14 @@ For exemple:
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setUpCustomTabDate()
+    }
+    
+     private fun setUpCustomTabDate() {
         customView = month_custom_view_id
         customView.handler = this
         customView.getMonths(
-            "id cookie",
+            "_session_id=x0LzXZpp1OnRfed0cBbNYhetZjs; path=/; HttpOnly",
             this,
             supportFragmentManager
         )
