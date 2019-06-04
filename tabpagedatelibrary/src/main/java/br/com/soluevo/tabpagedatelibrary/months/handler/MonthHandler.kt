@@ -6,4 +6,5 @@ interface MonthHandler {
 
     fun setMonth(monthResponse: MonthResponse)
     fun setError(error: String)
+    fun setMonsths(months: MutableList<MonthResponse>)
 }
