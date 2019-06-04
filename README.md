@@ -21,9 +21,7 @@ Try out the sample application on the Play Store.
 
 # Usage
 
-_(For a working implementation of this project see the demo/ folder.)_
-
-Add the dependency to your build.gradle.
+Add in your build.gradle.
 
 ```
 dependencies {
@@ -34,8 +32,18 @@ dependencies {
 
 ```
 
-Include the SmartTabLayout widget in your layout.
-This should usually be placed above the ViewPager it represents.
+
+In your build.gradle.
+```
+dependencies {
+ 
+    // Tabs date
+    implementation 'com.github.angelorobsonmelo:TabPageDateComponent:1.0.1'
+}
+
+```
+
+Include the component in your layout
 
 ```xml
 
@@ -60,214 +68,86 @@ This should usually be placed above the ViewPager it represents.
 
 ```
 
-In your onCreate method (or onCreateView for a fragment), bind the widget to the ViewPager.
-(If you use a utility together, you can easily add items to PagerAdapter)
-
-e.g. ViewPager of v4.Fragment
+In your onCreate (or onCreateView for a fragment) method, bind the id defined in the component and implement the MonthHandler interface
+For exemple:
 
 ```Java
 
+    class MainActivity : AppCompatActivity(), MonthHandler {
+
     private lateinit var customView: MonthCustomView
-    
-       override fun onCreate(savedInstanceState: Bundle?) {
-           super.onCreate(savedInstanceState)
-           setContentView(R.layout.activity_main)
-   
-           customView = month_custom_view_id
-           customView.handler = this
-           customView.getMonths(
-               "_session_id=x0LzXZpp1OnRfed0cBbNYhetZjs; path=/; HttpOnly",
-               this,
-               supportFragmentManager
-           )
-       }
-   
-       override fun setMonth(monthResponse: MonthResponse) {
-   
-       }
-   
-       override fun setMonsths(months: MutableList<MonthResponse>) {
-           months.forEach { monthResponse ->
-               val title =
-                   customView.getTitle(monthResponse)
-   
-               if (customView.isToday(monthResponse)) {
-                   customView.sectionsPagerAdapter.addFragment(OneFragment(), title)
-               } else {
-                   customView.sectionsPagerAdapter.addFragment(OtherFragment(), title)
-               }
-           }
-   
-           customView.sectionsPagerAdapter.notifyDataSetChanged()
-       }
-   
-       override fun setError(error: String) {
-   
-       }
-   
-       override fun onDestroy() {
-           super.onDestroy()
-           customView.clearDisposable()
-       }
 
-```
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-(Optional) If you use an OnPageChangeListener with your view pager you should set it in the widget rather than on the pager directly.
+        customView = month_custom_view_id
+        customView.handler = this
+        customView.getMonths(
+            "id cookie",
+            this,
+            supportFragmentManager
+        )
+    }
 
-
-```java
-
-viewPagerTab.setOnPageChangeListener(mPageChangeListener);
-
-```
-
-(Optional) Using the FragmentPagerItemAdapter of utility, you will be able to get a position in the Fragment side.
-
-```java
-
-int position = FragmentPagerItem.getPosition(getArguments());
-
-```
-
-This position will help to implement the parallax scrolling header that contains the ViewPager :P
-
-# How to customize the tab
-
-The customization of tab There are three ways.
-
-* Customize the attribute
-* SmartTabLayout#setCustomTabView(int layoutResId, int textViewId)
-* SmartTabLayout#setCustomTabView(TabProvider provider)
-
-If set the TabProvider, can build a view for each tab.
-
-```java
-
-public class SmartTabLayout extends HorizontalScrollView {
-
-    //...
-
-    /**
-     * Create the custom tabs in the tab layout. Set with
-     * {@link #setCustomTabView(com.ogaclejapan.smarttablayout.SmartTabLayout.TabProvider)}
-     */
-    public interface TabProvider {
-
-        /**
-         * @return Return the View of {@code position} for the Tabs
-         */
-        View createTabView(ViewGroup container, int position, PagerAdapter adapter);
+    override fun setMonth(monthResponse: MonthResponse) {
 
     }
 
-    //...
+    override fun setMonsths(months: MutableList<MonthResponse>) {
+        months.forEach { monthResponse ->
+            val title =
+                customView.getTitle(monthResponse)
+
+            if (customView.isToday(monthResponse)) {
+                customView.sectionsPagerAdapter.addFragment(TodayFragment(), title)
+            } else {
+                customView.sectionsPagerAdapter.addFragment(OthersFragment(), title)
+            }
+        }
+
+        customView.sectionsPagerAdapter.notifyDataSetChanged()
+    }
+
+    override fun setError(error: String) {
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        customView.clearDisposable()
+    }
 }
 
 ```
 
-# How to use the utility
-
-Utility has two types available to suit the Android support library.
-
-* utils-v4 library contains the PagerAdapter implementation class for _androidx.fragment.app.Fragment_
-* (Deprecated) utils-v13 library contains the PagerAdapter implementation class for _android.app.Fragment_
-
-The two libraries have different Android support libraries that depend,
-but implemented functionality is the same.
-
-## PagerAdapter for View-based Page
-
-```Kotlin
-
-ViewPagerItemAdapter adapter = new ViewPagerItemAdapter(ViewPagerItems.with(this)
-        .add(R.string.title, R.layout.page)
-        .add("title", R.layout.page)
-        .create());
-
-viewPager.setAdapter(adapter);
-
-//...
-
-public void onPageSelected(int position) {
-
-  //.instantiateItem() from until .destroyItem() is called it will be able to get the View of page.
-  View page = adapter.getPage(position);
-
-}
-
-
-```
-
-## PagerAdapter for Fragment-based Page
-
-Fragment-based PagerAdapter There are two implementations.
-Please differences refer to the library documentation for Android.
-
-* FragmentPagerItemAdapter extends FragmentPagerAdapter
-* FragmentStatePagerItemAdapter extends FragmentStatePagerAdapter
+The setMonth function is triggered by clicking a tab
 
 ```java
 
-FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
-        getSupportFragmentManager(), FragmentPagerItems.with(this)
-        .add(R.string.title, PageFragment.class),
-        .add(R.string.title, WithArgumentsPageFragment.class, new Bundler().putString("key", "value").get()),
-        .add("title", PageFragment.class)
-        .create());
-
-viewPager.setAdapter(adapter);
-
-//...
-
-public void onPageSelected(int position) {
-
-  //.instantiateItem() from until .destoryItem() is called it will be able to get the Fragment of page.
-  Fragment page = adapter.getPage(position);
-
-}
+ override fun setMonth(monthResponse: MonthResponse) {
+      // get month response from the clicked tab
+    }
 
 ```
 
-*__Notes:__ If using fragment inside a ViewPager, Must be use [Fragment#getChildFragmentManager()](https://developer.android.com/reference/androidx/fragment/app/Fragment.html#getChildFragmentManager).*
+the setMonsths function is triggered after the request for api
 
+```java
 
-# Looking for iOS ?
- Check [WormTabStrip](https://github.com/EzimetYusup/WormTabStrip) out.
- 
-# LICENSE
+ override fun setMonsths(months: MutableList<MonthResponse>) { 
+  // get all months loaded from api
+ }
 
 ```
-Copyright (C) 2015 ogaclejapan
-Copyright (C) 2013 The Android Open Source Project
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+the setError function is fired after api encounters an error
 
-http://www.apache.org/licenses/LICENSE-2.0
+```java
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+ override fun setError(error: String) { 
+  // get error
+ }
+
 ```
 
-[demo1_gif]: https://raw.githubusercontent.com/ogaclejapan/SmartTabLayout/master/art/demo1.gif
-[demo2_gif]: https://raw.githubusercontent.com/ogaclejapan/SmartTabLayout/master/art/demo2.gif
-[demo3_gif]: https://raw.githubusercontent.com/ogaclejapan/SmartTabLayout/master/art/demo3.gif
-[demo4_gif]: https://raw.githubusercontent.com/ogaclejapan/SmartTabLayout/master/art/demo4.gif
-[demo5_gif]: https://raw.githubusercontent.com/ogaclejapan/SmartTabLayout/master/art/demo5.gif
-[demo6_gif]: https://raw.githubusercontent.com/ogaclejapan/SmartTabLayout/master/art/demo6.gif
-[demo7_gif]: https://raw.githubusercontent.com/ogaclejapan/SmartTabLayout/master/art/demo7.gif
-[demo_app]: https://play.google.com/store/apps/details?id=com.ogaclejapan.smarttablayout.demo&referrer=utm_source%3Dgithub
-[demo_icon]: https://raw.githubusercontent.com/ogaclejapan/SmartTabLayout/master/art/icon.png
-[googleplay_store_badge]: http://www.android.com/images/brand/get_it_on_play_logo_large.png
-[maven_central_badge_svg]: https://maven-badges.herokuapp.com/maven-central/com.ogaclejapan.smarttablayout/library/badge.svg?style=flat
-[maven_central_badge_app]: https://maven-badges.herokuapp.com/maven-central/com.ogaclejapan.smarttablayout/library
-[android_arsenal_badge_svg]: https://img.shields.io/badge/Android%20Arsenal-SmartTabLayout-brightgreen.svg?style=flat
-[android_arsenal_badge_link]: http://android-arsenal.com/details/1/1683
-[android_weekly_badge_svg]: https://img.shields.io/badge/AndroidWeekly-%23148-blue.svg
-[android_weekly_badge_link]: http://androidweekly.net/issues/issue-148
-[qiitanium]: https://github.com/ogaclejapan/Qiitanium
-[google_slidingtabbasic]: https://github.com/googlesamples/android-SlidingTabsBasic
