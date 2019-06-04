@@ -1,6 +1,7 @@
 package br.com.soluevo.tabpagedatelibrary.months
 
 import android.content.Context
+import android.os.Handler
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
@@ -19,8 +20,6 @@ import br.com.soluevo.tabpagedatelibrary.months.di.component.DaggerMonthComponen
 import br.com.soluevo.tabpagedatelibrary.months.handler.MonthHandler
 import com.google.android.material.tabs.TabLayout
 import javax.inject.Inject
-import androidx.core.os.HandlerCompat.postDelayed
-import android.os.Handler
 
 
 class MonthCustomView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
@@ -102,7 +101,6 @@ class MonthCustomView(context: Context, attrs: AttributeSet) : LinearLayout(cont
             })
 
         })
-
 
         viewModel?.errorObserver?.observe(activity, Observer {
 

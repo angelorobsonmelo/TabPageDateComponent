@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import br.com.soluevo.tabpagedatelibrary.domain.MonthResponse
+import java.text.DateFormatSymbols
 import java.util.*
 
 /**
@@ -13,6 +14,8 @@ import java.util.*
  */
 class SectionsPagerAdapter(private val monthResponse: MutableList<MonthResponse>, fm: FragmentManager) :
     FragmentPagerAdapter(fm) {
+
+    private val shortMonths = DateFormatSymbols().shortMonths
 
     var title = ""
 
@@ -31,7 +34,7 @@ class SectionsPagerAdapter(private val monthResponse: MutableList<MonthResponse>
         title = if (monthResponse[position].month == mTodayMonth + 1 && monthResponse[position].year == mTodayYear) {
             "Hoje"
         } else {
-            "${monthResponse[position].month} / ${monthResponse[position].year}"
+            "${shortMonths[monthResponse[position].month - 1]} / ${monthResponse[position].year}"
         }
 
         return title
