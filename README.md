@@ -134,3 +134,42 @@ the setError function is fired after api encounters an error
 
 ```
 
+Get the title based on the date and check if you have any current date to return the title "Hoje"
+
+```java
+
+customView.getTitle(monthResponse)
+
+```
+
+Checks if it is "Hoje"
+
+```java
+
+customView.isToday(monthResponse)
+
+```
+
+Add an instance of fragment and title
+
+```java
+
+customView.sectionsPagerAdapter.addFragment(InstanceFragment(), "your title")
+
+```
+
+Updates dates with dates set
+
+```java
+
+ customView.sectionsPagerAdapter.notifyDataSetChanged()
+
+```
+
+Clears the observable after the fragment or activity is destroyed
+
+```java
+
+ customView.clearDisposable()
+
+```
