@@ -16,7 +16,10 @@ class MainActivity : AppCompatActivity(), MonthHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setUpCustomTabDate()
+    }
 
+    private fun setUpCustomTabDate() {
         customView = month_custom_view_id
         customView.handler = this
         customView.getMonths(
