@@ -1,23 +1,4 @@
 # Tab Page Date Component
-[![Maven Central][maven_central_badge_svg]][maven_central_badge_app] [![Android Arsenal][android_arsenal_badge_svg]][android_arsenal_badge_link] [![Android Weekly][android_weekly_badge_svg]][android_weekly_badge_link]
-
-![icon][demo_icon]
-
-A custom ViewPager title strip which gives continuous feedback to the user when scrolling.
-
-This library has been added some features and utilities based on [android-SlidingTabBasic][google_slidingtabbasic] project of Google Samples.
-
-
-![SmartTabLayout Demo1][demo1_gif] ![SmartTabLayout Demo2][demo2_gif]
-![SmartTabLayout Demo3][demo3_gif] ![SmartTabLayout Demo4][demo4_gif]
-![SmartTabLayout Demo5][demo5_gif] ![SmartTabLayout Demo6][demo6_gif]
-![SmartTabLayout Demo7][demo7_gif]
-
-
-Try out the sample application on the Play Store.
-
-[![Get it on Google Play][googleplay_store_badge]][demo_app]
-
 
 # Usage
 
