@@ -96,19 +96,50 @@ In your onCreate method (or onCreateView for a fragment), bind the widget to the
 
 e.g. ViewPager of v4.Fragment
 
-```java
+```Kotlin
 
-FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
-        getSupportFragmentManager(), FragmentPagerItems.with(this)
-        .add(R.string.titleA, PageFragment.class)
-        .add(R.string.titleB, PageFragment.class)
-        .create());
-
-ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-viewPager.setAdapter(adapter);
-
-SmartTabLayout viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpagertab);
-viewPagerTab.setViewPager(viewPager);
+    private lateinit var customView: MonthCustomView
+    
+       override fun onCreate(savedInstanceState: Bundle?) {
+           super.onCreate(savedInstanceState)
+           setContentView(R.layout.activity_main)
+   
+           customView = month_custom_view_id
+           customView.handler = this
+           customView.getMonths(
+               "_session_id=x0LzXZpp1OnRfed0cBbNYhetZjs; path=/; HttpOnly",
+               this,
+               supportFragmentManager
+           )
+       }
+   
+       override fun setMonth(monthResponse: MonthResponse) {
+   
+       }
+   
+       override fun setMonsths(months: MutableList<MonthResponse>) {
+           months.forEach { monthResponse ->
+               val title =
+                   customView.getTitle(monthResponse)
+   
+               if (customView.isToday(monthResponse)) {
+                   customView.sectionsPagerAdapter.addFragment(OneFragment(), title)
+               } else {
+                   customView.sectionsPagerAdapter.addFragment(OtherFragment(), title)
+               }
+           }
+   
+           customView.sectionsPagerAdapter.notifyDataSetChanged()
+       }
+   
+       override fun setError(error: String) {
+   
+       }
+   
+       override fun onDestroy() {
+           super.onDestroy()
+           customView.clearDisposable()
+       }
 
 ```
 
@@ -130,44 +161,6 @@ int position = FragmentPagerItem.getPosition(getArguments());
 ```
 
 This position will help to implement the parallax scrolling header that contains the ViewPager :P
-
-# Attributes
-
-There are several attributes you can set:
-
-| attr | description |
-|:---|:---|
-| stl_indicatorAlwaysInCenter | If set to true, active tab is always displayed in center (Like Newsstand google app), default false |
-| stl_indicatorWithoutPadding | If set to true, draw the indicator without padding of tab, default false |
-| stl_indicatorInFront | Draw the indicator in front of the underline, default false |
-| stl_indicatorInterpolation | Behavior of the indicator: 'linear' or 'smart' |
-| stl_indicatorGravity | Drawing position of the indicator: 'bottom' or 'top' or 'center', default 'bottom' |
-| stl_indicatorColor | Color of the indicator |
-| stl_indicatorColors | Multiple colors of the indicator, can set the color for each tab |
-| stl_indicatorThickness | Thickness of the indicator |
-| stl_indicatorWidth | Width of the indicator, default 'auto' |
-| stl_indicatorCornerRadius | Radius of rounded corner the indicator |
-| stl_overlineColor | Color of the top line |
-| stl_overlineThickness | Thickness of the top line |
-| stl_underlineColor | Color of the bottom line |
-| stl_underlineThickness | Thickness of the bottom line |
-| stl_dividerColor | Color of the dividers between tabs |
-| stl_dividerColors | Multiple colors of the dividers between tabs, can set the color for each tab |
-| stl_dividerThickness | Thickness of the divider |
-| stl_defaultTabBackground | Background drawable of each tab. In general it set the StateListDrawable |
-| stl_defaultTabTextAllCaps | If set to true, all tab titles will be upper case, default true |
-| stl_defaultTabTextColor | Text color of the tab that was included by default |
-| stl_defaultTabTextSize | Text size of the tab that was included by default |
-| stl_defaultTabTextHorizontalPadding | Text layout padding of the tab that was included by default |
-| stl_defaultTabTextMinWidth | Minimum width of tab |
-| stl_customTabTextLayoutId | Layout ID defined custom tab. If you do not specify a layout, use the default tab |
-| stl_customTabTextViewId | Text view ID in a custom tab layout. If you do not define with customTabTextLayoutId, does not work |
-| stl_distributeEvenly | If set to true, each tab is given the same weight, default false |
-| stl_clickable | If set to false, disable the selection of a tab click, default true |
-| stl_titleOffset | If set to 'auto_center', the slide position of the tab in the middle it will keep to the center. If specify a dimension it will be offset from the left edge, default 24dp |
-| stl_drawDecorationAfterTab | Draw the decoration(indicator and lines) after drawing of tab, default false |
-
-*__Notes:__ Both 'stl_indicatorAlwaysInCenter' and 'stl_distributeEvenly' if it is set to true, it will throw UnsupportedOperationException.*
 
 # How to customize the tab
 
@@ -215,7 +208,7 @@ but implemented functionality is the same.
 
 ## PagerAdapter for View-based Page
 
-```java
+```Kotlin
 
 ViewPagerItemAdapter adapter = new ViewPagerItemAdapter(ViewPagerItems.with(this)
         .add(R.string.title, R.layout.page)
