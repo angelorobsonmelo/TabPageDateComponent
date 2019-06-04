@@ -96,7 +96,7 @@ In your onCreate method (or onCreateView for a fragment), bind the widget to the
 
 e.g. ViewPager of v4.Fragment
 
-```Kotlin
+```Java
 
     private lateinit var customView: MonthCustomView
     
