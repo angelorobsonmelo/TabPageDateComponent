@@ -10,27 +10,28 @@
 
     </data>
 
-        <LinearLayout
-                android:id="@+id/container"
+    <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:tabGravity="fill"
+                app:tabMode="scrollable"
+                app:tabTextColor="@color/color_gray"
+                app:tabSelectedTextColor="@color/color_blue_dark"
+                app:tabIndicatorHeight="0dp"
+                app:tabTextAppearance="@style/TabTextStyle"/>
 
-            <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:tabGravity="fill"
-                    app:tabMode="scrollable"
-                    app:tabTextColor="@color/color_gray"
-                    app:tabSelectedTextColor="@color/color_blue_dark"
-                    app:tabTextAppearance="@style/TabTextStyle"/>
-
-            <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/view_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-        </LinearLayout>
+        <androidx.viewpager.widget.ViewPager
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </LinearLayout>
 
 
 </layout>
