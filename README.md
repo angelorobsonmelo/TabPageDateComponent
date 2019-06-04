@@ -41,9 +41,7 @@ Include the component in your layout
         <br.com.soluevo.tabpagedatelibrary.months.MonthCustomView
                 android:id="@+id/month_custom_view_id"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-        </br.com.soluevo.tabpagedatelibrary.months.MonthCustomView>
+                android:layout_height="wrap_content" />
 
 </LinearLayout>
 
