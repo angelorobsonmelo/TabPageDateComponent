@@ -69,7 +69,7 @@ For exemple:
         customView = month_custom_view_id
         customView.handler = this
         customView.getMonths(
-            "_session_id=x0LzXZpp1OnRfed0cBbNYhetZjs; path=/; HttpOnly",
+            "cookie id",
             this,
             supportFragmentManager
         )
