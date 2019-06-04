@@ -75,7 +75,7 @@ For exemple:
      private fun setUpCustomTabDate() {
         customView = month_custom_view_id
         customView.handler = this
-        customView.getMonths(
+        customView.getMonthsFromActivity(
             "cookie id",
             this,
             supportFragmentManager
