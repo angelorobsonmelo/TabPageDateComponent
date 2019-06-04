@@ -26,24 +26,12 @@ _(For a working implementation of this project see the demo/ folder.)_
 Add the dependency to your build.gradle.
 
 ```
-// For androidx (1.0.0)
 dependencies {
-    compile 'com.ogaclejapan.smarttablayout:library:2.0.0@aar'
-
-    //Optional: see how to use the utility.
-    compile 'com.ogaclejapan.smarttablayout:utils-v4:2.0.0@aar'
+ 
+    // Tabs date
+    implementation 'com.github.angelorobsonmelo:TabPageDateComponent:1.0.1'
 }
 
-// For legacy android support library (28.0.0)
-dependencies {
-    compile 'com.ogaclejapan.smarttablayout:library:1.7.0@aar'
-
-    //Optional: see how to use the utility.
-    compile 'com.ogaclejapan.smarttablayout:utils-v4:1.7.0@aar'
-
-    //Deprecated since 1.7.0
-    compile 'com.ogaclejapan.smarttablayout:utils-v13:1.7.0@aar'
-}
 ```
 
 Include the SmartTabLayout widget in your layout.
