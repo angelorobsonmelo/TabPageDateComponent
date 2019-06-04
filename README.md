@@ -104,6 +104,8 @@ For exemple:
 
 ```
 
+# Functions information 
+
 The setMonth function is triggered by clicking a tab
 
 ```java
