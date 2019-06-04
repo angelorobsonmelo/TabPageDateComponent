@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -60,7 +61,7 @@ class MonthCustomView(context: Context, attrs: AttributeSet) : LinearLayout(cont
             .inject(this)
     }
 
-    fun getMonths(
+    fun getMonthsFromActivity(
         cookieId: String,
         activity: AppCompatActivity,
         fm: FragmentManager
@@ -92,6 +93,42 @@ class MonthCustomView(context: Context, attrs: AttributeSet) : LinearLayout(cont
         })
 
         viewModel?.position?.observe(activity, Observer<Int> {
+            handler?.setMonth(months[it])
+        })
+    }
+
+    fun getMonthsFromFragment(
+        cookieId: String,
+        fragment: Fragment,
+        fm: FragmentManager
+    ) {
+        viewModel = ViewModelProviders.of(fragment, viewModelFactory)[MonthViewModel::class.java]
+        viewModel?.getMonths(cookieId)
+
+        binding.lifecycleOwner = fragment
+        binding.viewModel = viewModel
+
+        viewModel?.successObserver?.observe(fragment, Observer {
+            months.clear()
+            months.addAll(it)
+
+            val pair = setUpTabsAndViewPager(fm)
+            val viewPager = pair.first
+            val tabs = pair.second
+
+            handler?.setMonsths(it)
+
+            val lastItem = it.size - 1
+
+            navigateToTabToday(tabs, lastItem, viewPager)
+            initTabOnClickListener(tabs)
+        })
+
+        viewModel?.errorObserver?.observe(fragment, Observer {
+
+        })
+
+        viewModel?.position?.observe(fragment, Observer<Int> {
             handler?.setMonth(months[it])
         })
     }

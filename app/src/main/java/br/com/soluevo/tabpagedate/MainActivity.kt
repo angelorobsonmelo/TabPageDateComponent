@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(), MonthHandler {
     private fun setUpCustomTabDate() {
         customView = month_custom_view_id
         customView.handler = this
-        customView.getMonths(
+        customView.getMonthsFromActivity(
             "_session_id=x0LzXZpp1OnRfed0cBbNYhetZjs; path=/; HttpOnly",
             this,
             supportFragmentManager
