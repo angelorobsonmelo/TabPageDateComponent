@@ -2,7 +2,7 @@
 
 # Usage
 
-Add in your build.gradle.
+Add in your build.gradle. Add 
 
 ```
 dependencies {
@@ -16,10 +16,11 @@ dependencies {
 
 In your build.gradle.
 ```
-dependencies {
- 
-    // Tabs date
-    implementation 'com.github.angelorobsonmelo:TabPageDateComponent:1.0.1'
+allprojects {
+    repositories {
+        ...
+        maven { url "https://jitpack.io" }
+    }
 }
 
 ```
